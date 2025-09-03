@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Styling and JavaScript Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* --------- Base Styling --------- */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background: #f0f2f5;
+    }
+
+    header {
+      background: #4a90e2;
+      color: white;
+      padding: 1rem;
+      font-size: 1.5rem;
+    }
+
+    section {
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 900px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #357ab7;
+    }
+
+    /* --------- Responsive Design --------- */
+    @media (max-width: 768px) {
+      header {
+        font-size: 1.2rem;
+      }
+      section {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        font-size: 1rem;
+        padding: 0.8rem;
+      }
+      button {
+        padding: 8px 16px;
+      }
+    }
+
+    /* --------- Quiz Styling --------- */
+    #quiz-container {
+      margin-top: 15px;
+    }
+
+    .question {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* --------- Carousel Styling --------- */
+    #carousel {
+      position: relative;
+      max-width: 100%;
+      height: 250px;
+      overflow: hidden;
+      border-radius: 10px;
+      margin: 20px auto;
+    }
+
+    #carousel img {
+      width: 100%;
+      height: 100%;
+      display: none;
+      object-fit: cover;
+    }
+
+    #carousel img.active {
+      display: block;
+    }
+
+    /* --------- API Data --------- */
+    #api-data {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Advanced Styling and JavaScript Demo
+  </header>
+
+  <!-- Responsive Design Example -->
+  <section>
+    <h2>Responsive Design with Media Queries</h2>
+    <p>Resize the browser to see how the font size and layout adjust for mobile, tablet, and desktop.</p>
+  </section>
+
+  <!-- Interactive Quiz -->
+  <section>
+    <h2>Interactive Quiz</h2>
+    <div id="quiz-container">
+      <p class="question">1. What does HTML stand for?</p>
+      <button onclick="checkAnswer(this, true)">Hyper Text Markup Language</button>
+      <button onclick="checkAnswer(this, false)">High Tech Modern Language</button>
+    </div>
+    <p id="quiz-result"></p>
+  </section>
+
+  <!-- Image Carousel -->
+  <section>
+    <h2>Image Carousel</h2>
+    <div id="carousel">
+      <img src="https://picsum.photos/id/1015/800/400" class="active">
+      <img src="https://picsum.photos/id/1025/800/400">
+      <img src="https://picsum.photos/id/1035/800/400">
+    </div>
+    <button onclick="prevImage()">Prev</button>
+    <button onclick="nextImage()">Next</button>
+  </section>
+
+  <!-- Fetch API Example -->
+  <section>
+    <h2>Fetch Data from Public API</h2>
+    <button onclick="getJoke()">Get a Random Joke</button>
+    <div id="api-data"></div>
+  </section>
+
+  <script>
+    /* ---------- Quiz Logic ---------- */
+    function checkAnswer(button, isCorrect) {
+      const result = document.getElementById("quiz-result");
+      if (isCorrect) {
+        result.textContent = "✅ Correct Answer!";
+        result.style.color = "green";
+      } else {
+        result.textContent = "❌ Wrong Answer. Try again!";
+        result.style.color = "red";
+      }
+    }
+
+    /* ---------- Carousel Logic ---------- */
+    let currentIndex = 0;
+    const images = document.querySelectorAll("#carousel img");
+
+    function showImage(index) {
+      images.forEach((img, i) => {
+        img.classList.toggle("active", i === index);
+      });
+    }
+
+    function prevImage() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showImage(currentIndex);
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % images.length;
+      showImage(currentIndex);
+    }
+
+    /* Auto-rotate every 3s */
+    setInterval(nextImage, 3000);
+
+    /* ---------- Fetch API Logic ---------- */
+    async function getJoke() {
+      try {
+        const res = await fetch("https://official-joke-api.appspot.com/random_joke");
+        const data = await res.json();
+        document.getElementById("api-data").innerHTML =
+          `😂 ${data.setup} <br> 👉 ${data.punchline}`;
+      } catch (error) {
+        document.getElementById("api-data").textContent = "Failed to fetch joke!";
+      }
+    }
+  </script>
+</body>
+</html>
